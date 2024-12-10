@@ -1,87 +1,104 @@
-# Cryptography Project
+# **Cryptography Project: Caesar Cipher Implementation**
 
-## Objective
-
-This project aims to develop a Python-based application to demonstrate fundamental cryptography principles. The application focuses on encrypting, decrypting, and securing data using various cryptographic algorithms. The primary goal is to enhance understanding of encryption techniques, secure key management, and data confidentiality.
-
-### Skills Learned
-
-- Proficiency in Python's cryptography libraries (e.g., `cryptography`, `PyCrypto`).
-- Understanding of symmetric and asymmetric encryption methods.
-- Hands-on experience with hashing techniques and digital signatures.
-- Knowledge of secure key management and implementation best practices.
-- Ability to design secure applications and protect sensitive information.
-
-### Tools Used
-
-- Python 3 for development.
-- Libraries:
-  - `cryptography` for encryption and decryption.
-  - `hashlib` for hashing algorithms (e.g., SHA-256).
-  - `os` and `secrets` for secure random number generation.
-- Jupyter Notebook for testing and documenting the project.
+## **Objective**  
+This project demonstrates the use of the **Caesar Cipher**, a fundamental cryptographic technique, to encrypt and decrypt messages. The primary focus is on understanding substitution ciphers, character manipulation, and the basics of cryptography, providing a strong foundation for more advanced encryption methods.
 
 ---
 
-## Steps
-
-1. **Set Up the Environment:**
-   - Installed Python 3 and required libraries (`cryptography`, `hashlib`, etc.).
-   - Created a virtual environment to manage dependencies.
-
-2. **Implement Symmetric Encryption:**
-   - Used AES (Advanced Encryption Standard) to encrypt and decrypt data.
-   - Implemented secure key storage and management.
-
-3. **Implement Asymmetric Encryption:**
-   - Used RSA (Rivest-Shamir-Adleman) for public/private key encryption.
-   - Created digital signatures for verifying message integrity.
-
-4. **Hashing and Integrity Checks:**
-   - Used `hashlib` to generate and verify SHA-256 hashes.
-   - Developed a file integrity checker to identify tampered files.
-
-5. **Generate Secure Keys:**
-   - Used the `secrets` library for generating cryptographically secure keys.
-   - Implemented a password-based key derivation function (PBKDF2) for user-provided keys.
-
-6. **Test Encryption and Decryption:**
-   - Encrypted and decrypted text files and images to validate functionality.
-   - Simulated secure message exchange using both symmetric and asymmetric encryption.
-
-7. **Create a CLI Tool:**
-   - Developed a command-line interface for users to select encryption modes, input data, and retrieve results.
-
-8. **Documentation and Examples:**
-   - Documented use cases, algorithms, and examples in a README file.
-   - Provided sample scripts for common cryptographic operations.
+### **Skills Learned**  
+- Mastery of string manipulation for cryptographic purposes.  
+- Understanding the principles of substitution ciphers and their applications.  
+- Implementation of modular arithmetic for encryption and decryption.  
+- Hands-on experience in Python programming and text processing.  
+- Knowledge of key-based encryption and its limitations.  
 
 ---
 
-## Example Code
+### **Tools Used**  
+- **Python** for development.  
+- **`string` library** for character sets (uppercase and lowercase alphabets).  
+- **Translation tables** (`str.maketrans`) for efficient character substitution.
 
-Here’s a snippet showcasing AES encryption:
+---
+
+## **Steps**  
+
+### 1. **Set Up the Environment**  
+- Installed Python 3.  
+- Used the built-in `string` library for character manipulation.
+
+---
+
+### 2. **Implement Caesar Cipher Encryption**  
+- Developed the `caesar_encrypt` function.  
+- Utilized translation tables to shift characters based on a user-defined key.
+
+---
+
+### 3. **Implement Caesar Cipher Decryption**  
+- Designed the `caesar_decrypt` function to reverse the encryption process.  
+- Applied modular arithmetic to handle key shifts within the alphabet range.
+
+---
+
+### 4. **Test the Cipher**  
+- Inputted a sample message (`"Subscribe To W J Pearce"`) and key (`3`) for demonstration.  
+- Verified the encrypted and decrypted outputs matched expectations.
+
+---
+
+### 5. **Enhance Understanding**  
+- Explored the strengths and limitations of substitution ciphers in cryptography.  
+- Highlighted the importance of key secrecy and its impact on encryption security.
+- 
+---
+
+## Results  
+![cryptography 3](https://github.com/user-attachments/assets/42c30426-4993-4f30-8ce6-bba8e40a331b)
+
+---
+
+## **Example Code**  
 
 ```python
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.backends import default_backend
-import os
+import string
 
-# Generate a random key and IV
-key = os.urandom(32)  # AES-256
-iv = os.urandom(16)
+# Function for Caesar Cipher encryption
+def caesar_encrypt(message, key):
+    shift = key % 26
+    # Create a translation table for the shift
+    cipher = str.maketrans(
+        string.ascii_lowercase + string.ascii_uppercase,
+        string.ascii_lowercase[shift:] + string.ascii_lowercase[:shift] +
+        string.ascii_uppercase[shift:] + string.ascii_uppercase[:shift]
+    )
+    # Encrypt the message using the translation table
+    encrypted_message = message.translate(cipher)
+    return encrypted_message
 
-# Encrypt the data
-def encrypt_data(data, key, iv):
-    padder = padding.PKCS7(128).padder()
-    padded_data = padder.update(data) + padder.finalize()
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(padded_data) + encryptor.finalize()
-    return ciphertext
+# Function for Caesar Cipher decryption
+def caesar_decrypt(message, key):
+    shift = 26 - (key % 26)
+    # Create a translation table for the reverse shift
+    cipher = str.maketrans(
+        string.ascii_lowercase + string.ascii_uppercase,
+        string.ascii_lowercase[shift:] + string.ascii_lowercase[:shift] +
+        string.ascii_uppercase[shift:] + string.ascii_uppercase[:shift]
+    )
+    # Decrypt the message using the translation table
+    decrypted_message = message.translate(cipher)
+    return decrypted_message
 
 # Example usage
-plaintext = b"Sensitive information"
-ciphertext = encrypt_data(plaintext, key, iv)
-print(f"Ciphertext: {ciphertext}")
+message = 'I am a Cybersecurity Analyst'
+key = 3
+
+# Encrypting the message
+encrypted_message = caesar_encrypt(message, key)
+print(f'Encrypted message: {encrypted_message}')
+
+# Decrypting the message
+decrypted_message = caesar_decrypt(encrypted_message, key)
+print(f'Decrypted message: {decrypted_message}')
+
+
